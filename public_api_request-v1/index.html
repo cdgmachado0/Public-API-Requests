@@ -6,7 +6,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link href="css/normalize.css" rel="stylesheet">
         <link href="css/styles.css" rel="stylesheet">
-    </head>
+        <link rel="stylesheet" type="text/css" media="all" href="jquery-lightbox/css/jquery.lightbox-0.5.css">
+        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+        <script type="text/javascript" charset="utf-8" src="jquery-lightbox/js/jquery.lightbox-0.5.wenbert.js"></script>
+   </head>
     <body>
 
         <!-- =======================
@@ -97,5 +100,17 @@
 
         <!-- Add your JS here -->
        <script src="js/scripts.js"></script> 
+       <script type="text/javascript">
+        $(function(){
+          $('a[rel=lightbox]').lightBox({
+            containerResizeSpeed: 250,
+            fixedNavigation: true
+          });
+          $('a[rel=2ndlightbox]').lightBox({
+            overlayBgColor: '#fff',
+            overlayOpacity: 0.7
+          });
+        });
+        </script>
     </body>
 </html>
