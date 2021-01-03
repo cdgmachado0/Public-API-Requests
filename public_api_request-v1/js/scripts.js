@@ -39,6 +39,7 @@ function checkStatus(response) {
     }
 }
 
+// person.cell
 function createModalWindow(data) {
     const peopleModals = data.results.map(person => `
         <div class="modal-container">
@@ -112,6 +113,14 @@ function closeModal(e) {
 } 
 
 document.addEventListener('keyup', closeModal);
+
+
+function formatDetails(detail) { // (349)-775-4350 // 1958-11-14T06:42:14.547Z
+    const phoneRegex = /^(\D*?\d{3})-(\D*?\d{3})-(\D*?\d{4})\D*/;
+    const dobRegex = '';
+
+    return detail.replace(phoneRegex, '($1) $2 $3');
+}
 
 
 
