@@ -1,15 +1,17 @@
+const gallery = document.querySelector('#gallery');
+
 
 fetch('https://randomuser.me/api/?results=12&nat=us')
     .then(checkStatus)
     .then(response => response.json())
     .then(createGallery)
+    .then(createModalWindow)
     .catch(err => console.error('Something went wrong:', err));
-
 
 
 function createGallery(data) {
     const peopleGallery = data.results.map(person => `
-    <div class="card" >
+    <div class="card">
         <div class="card-img-container">
             <img class="card-img" src="${person.picture.large}" alt="profile picture">
         </div>
@@ -19,9 +21,14 @@ function createGallery(data) {
             <p class="card-text cap">${person.location.city}, ${person.location.state}</p>
         </div>
     </div>
-    `).join('');
-    const gallery = document.querySelector('#gallery');
+    `).join(''); 
+
     gallery.innerHTML = peopleGallery;
+    const cardList = gallery.children;
+    for (let card of cardList) {
+        card.addEventListener('click', displayModal);
+    } 
+    return data; 
 }
 
 function checkStatus(response) {
@@ -49,19 +56,25 @@ function createModalWindow(data) {
             </div>
         </div>
     `);
+    for (let person of peopleModals) {
+        gallery.insertAdjacentHTML('beforeend', person);
+    }
+    const list = gallery.children; //trying to get the modal window to disappear
+    for (let i = 0; i < 12; i++) {
+        let div = list[i + 13]
+        div.style.display = 'none';
+    }
 }
 
-const gallery = document.querySelector('#gallery').children;
-console.log(gallery);
-console.log(gallery.length);
+function displayModal(e) {
+    const cardDiv = e.target;
+    console.log(cardDiv);
+}
 
-// for (let i = 0; i < gallery.length; i++) {
-    gallery[0].addEventListener('click', e => {
-        if (e.target.tagName === 'DIV') {
-            console.log(e.target);
-        }
-    });
-// }
+
+
+
+
 
 
 
