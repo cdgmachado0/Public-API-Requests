@@ -59,16 +59,37 @@ function createModalWindow(data) {
     for (let person of peopleModals) {
         gallery.insertAdjacentHTML('beforeend', person);
     }
-    const list = gallery.children; //manage to get the modal window disappear
-    for (let i = 0; i < 12; i++) {
-        let div = list[i + 12]
+    const modalList = gallery.children;
+    for (let i = 12; i < 24; i++) {
+        let div = modalList[i]
         div.style.display = 'none';
     }
 }
 
-function displayModal(e) {
-    const cardDiv = e.target;
-    console.log(cardDiv);
+function displayModal(e) { 
+    const target = e.target;
+    let email;
+    if (target.className === 'card-info-container') {
+        email = target.firstElementChild.nextElementSibling;
+    } else if (target.tagName === 'IMG') {
+        email = target.parentNode.nextElementSibling.children[1];
+    } else if (target.tagName === 'P' && target.className === 'card-text') {
+        email = target;
+    } else if (target.tagName === 'P') {
+        email = target.previousElementSibling;
+    } else if (target.tagName === 'H3') {
+        email = target.nextElementSibling;
+    } else if (target.className === 'card') {
+        email = target.children[1].children[1];
+    }
+
+    const modalList = gallery.children;
+    for (let i = 12; i < 24; i++) {
+        let personEmail = modalList[i].querySelector('p').textContent;
+        if (email.textContent === personEmail) {
+            console.log(personEmail);
+        }
+    }
 }
 
 
