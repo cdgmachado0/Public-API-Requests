@@ -61,10 +61,16 @@ function createModalWindow(data) {
     }
     const modalList = gallery.children;
     for (let i = 12; i < 24; i++) {
-        let div = modalList[i]
-        div.style.display = 'none';
+        let modal = modalList[i]
+        modal.style.display = 'none';
+    }
+
+    const closeButtons = gallery.querySelectorAll('#modal-close-btn');
+    for (let button of closeButtons) {
+        button.addEventListener('click', closeModal);
     }
 }
+
 
 function displayModal(e) { 
     const target = e.target;
@@ -81,16 +87,33 @@ function displayModal(e) {
         email = target.nextElementSibling;
     } else if (target.className === 'card') {
         email = target.children[1].children[1];
+    } else if (target.className === 'card-img-container') {
+        email = target.nextElementSibling.children[1];
     }
 
     const modalList = gallery.children;
     for (let i = 12; i < 24; i++) {
-        let personEmail = modalList[i].querySelector('p').textContent;
+        currentModal = modalList[i];
+        let personEmail = currentModal.querySelector('p').textContent;
         if (email.textContent === personEmail) {
-            console.log(personEmail);
+            currentModal.style.display = '';
+            break;
         }
     }
 }
+
+let currentModal;
+function closeModal(e) {
+    if (e.key === 'Escape') {
+        currentModal.style.display = 'none';
+    } else if (e.type === 'click') {
+        currentModal.style.display = 'none';
+    }
+} 
+
+document.addEventListener('keyup', closeModal);
+
+
 
 
 
