@@ -59,9 +59,9 @@ function createModalWindow(data) {
     for (let person of peopleModals) {
         gallery.insertAdjacentHTML('beforeend', person);
     }
-    const list = gallery.children; //trying to get the modal window to disappear
+    const list = gallery.children; //manage to get the modal window disappear
     for (let i = 0; i < 12; i++) {
-        let div = list[i + 13]
+        let div = list[i + 12]
         div.style.display = 'none';
     }
 }
