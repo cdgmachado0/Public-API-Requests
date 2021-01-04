@@ -118,7 +118,7 @@ function closeModal(e) {
 document.addEventListener('keyup', closeModal);
 
 
-function formatDetails(detail) { // 1958-11-14T06:42:14.547Z
+function formatDetails(detail) { 
     const phoneRegex = /^\D*?(\d{3})\D*?(\d{3})\D*?(\d{4})/; 
     const dobRegex = /^(\d{4})\D*(\d{2})\D*(\d{2}).+/;
 
@@ -129,6 +129,24 @@ function formatDetails(detail) { // 1958-11-14T06:42:14.547Z
     }
 }
 
+
+const searchForm = `
+    <form action="#" method="get">
+        <input type="search" id="search-input" class="search-input" placeholder="Search...">
+        <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+    </form>
+`;
+
+const searchContainer = document.querySelector('div.search-container')
+searchContainer.innerHTML = searchForm;
+
+
+searchContainer.addEventListener('keyup', (e, data) => {
+    let search = e.key;
+    console.log(search);
+});
+
+// working on the filter for the searchbar
 
 
 
