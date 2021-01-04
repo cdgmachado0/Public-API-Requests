@@ -39,9 +39,10 @@ function checkStatus(response) {
     }
 }
 
-// person.cell
 function createModalWindow(data) {
-    const peopleModals = data.results.map(person => `
+    const peopleModals = data.results.map(person => {
+        let formattedNum = formatDetails(person.cell);
+        return `
         <div class="modal-container">
         <div class="modal">
             <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
@@ -51,12 +52,13 @@ function createModalWindow(data) {
                 <p class="modal-text">${person.email}</p>
                 <p class="modal-text cap">${person.location.city}</p>
                 <hr>
-                <p class="modal-text">${person.cell}</p>
+                <p class="modal-text">${formattedNum}</p>
                 <p class="modal-text">${person.location.street.name} ${person.location.street.number}, ${person.location.state}. ${person.location.postcode}</p>
                 <p class="modal-text">Birthday: ${person.dob.date}</p>
             </div>
         </div>
-    `);
+    `
+    }); 
     for (let person of peopleModals) {
         gallery.insertAdjacentHTML('beforeend', person);
     }
@@ -116,11 +118,16 @@ document.addEventListener('keyup', closeModal);
 
 
 function formatDetails(detail) { // (349)-775-4350 // 1958-11-14T06:42:14.547Z
-    const phoneRegex = /^(\D*?\d{3})-(\D*?\d{3})-(\D*?\d{4})\D*/;
+    const phoneRegex = /^\D*?(\d{3})\D*?(\d{3})\D*?(\d{4})/; // correct regex already: /^(\D*?)(\d{3})(\D*?)(\D*?)(\d{3})(\D*?)(\d{4})/
     const dobRegex = '';
 
-    return detail.replace(phoneRegex, '($1) $2 $3');
+    const formattedNum = detail.replace(phoneRegex, '($1) $2-$3'); 
+    return (formattedNum);
 }
+
+
+
+
 
 
 
