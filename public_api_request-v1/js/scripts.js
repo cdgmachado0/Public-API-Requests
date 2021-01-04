@@ -142,8 +142,18 @@ searchContainer.innerHTML = searchForm;
 
 
 searchContainer.addEventListener('keyup', (e, data) => {
-    let search = e.key;
+    let search = e.target.value;
     console.log(search);
+
+    const modalList = gallery.children;
+    for (let i = 0; i < 12; i++) {
+        let fullName = modalList[i].children[1].firstElementChild.textContent.toLowerCase();
+        if (!fullName.includes(search.toLowerCase())) {
+            modalList[i].style.display = 'none';
+        } else {
+            modalList[i].style.display = '';
+        }
+    }
 });
 
 // working on the filter for the searchbar
