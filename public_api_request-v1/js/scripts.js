@@ -42,6 +42,7 @@ function checkStatus(response) {
 function createModalWindow(data) {
     const peopleModals = data.results.map(person => {
         let formattedNum = formatDetails(person.cell);
+        let formattedDOB = formatDetails(person.dob.date);
         return `
         <div class="modal-container">
         <div class="modal">
@@ -54,7 +55,7 @@ function createModalWindow(data) {
                 <hr>
                 <p class="modal-text">${formattedNum}</p>
                 <p class="modal-text">${person.location.street.name} ${person.location.street.number}, ${person.location.state}. ${person.location.postcode}</p>
-                <p class="modal-text">Birthday: ${person.dob.date}</p>
+                <p class="modal-text">Birthday: ${formattedDOB}</p>
             </div>
         </div>
     `
@@ -117,12 +118,15 @@ function closeModal(e) {
 document.addEventListener('keyup', closeModal);
 
 
-function formatDetails(detail) { // (349)-775-4350 // 1958-11-14T06:42:14.547Z
-    const phoneRegex = /^\D*?(\d{3})\D*?(\d{3})\D*?(\d{4})/; // correct regex already: /^(\D*?)(\d{3})(\D*?)(\D*?)(\d{3})(\D*?)(\d{4})/
-    const dobRegex = '';
+function formatDetails(detail) { // 1958-11-14T06:42:14.547Z
+    const phoneRegex = /^\D*?(\d{3})\D*?(\d{3})\D*?(\d{4})/; 
+    const dobRegex = /^(\d{4})\D*(\d{2})\D*(\d{2}).+/;
 
-    const formattedNum = detail.replace(phoneRegex, '($1) $2-$3'); 
-    return (formattedNum);
+    if (detail.charAt(0) === '(') {
+        return formattedNum = detail.replace(phoneRegex, '($1) $2-$3'); 
+    } else {
+        return formattedDOB = detail.replace(dobRegex, '$2/$3/$1');   
+    }
 }
 
 
