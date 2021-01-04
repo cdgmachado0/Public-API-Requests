@@ -75,6 +75,15 @@ function createModalWindow(data) {
     for (let button of closeButtons) {
         button.addEventListener('click', closeModal);
     }
+
+    const infoContainer = gallery.querySelectorAll('.modal-info-container');
+    for (let containers of infoContainer) {
+        for (let button of containers.children) {
+            if (button.tagName === 'BUTTON') {
+                button.addEventListener('click', switchModal); //switchModal working fine
+            }
+        }
+    }
 }
 
 
@@ -116,6 +125,12 @@ function closeModal(e) {
         currentModal.style.display = 'none';
     }
 } 
+
+function switchModal(e) {
+    if (e.target.id === 'move-right') {
+        console.log('right');
+    }
+}
 
 document.addEventListener('keyup', closeModal);
 
