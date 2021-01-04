@@ -45,21 +45,24 @@ function createModalWindow(data) {
         let formattedDOB = formatDetails(person.dob.date);
         return `
         <div class="modal-container">
-        <div class="modal">
-            <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
-            <div class="modal-info-container">
-                <img class="modal-img" src="${person.picture.large}" alt="profile picture">
-                <h3 id="name" class="modal-name cap">${person.name.first} ${person.name.last}</h3>
-                <p class="modal-text">${person.email}</p>
-                <button id="move-right">Next</button>
-                <button id="move-left">Previous</button>
-                <p class="modal-text cap">${person.location.city}</p>
-                <hr>
-                <p class="modal-text">${formattedNum}</p>
-                <p class="modal-text">${person.location.street.name} ${person.location.street.number}, ${person.location.state}. ${person.location.postcode}</p>
-                <p class="modal-text">Birthday: ${formattedDOB}</p>
+            <div class="modal">
+                <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+                <div class="modal-info-container">
+                    <img class="modal-img" src="${person.picture.large}" alt="profile picture">
+                    <h3 id="name" class="modal-name cap">${person.name.first} ${person.name.last}</h3>
+                    <p class="modal-text">${person.email}</p>
+                    <p class="modal-text cap">${person.location.city}</p>
+                    <hr>
+                    <p class="modal-text">${formattedNum}</p>
+                    <p class="modal-text">${person.location.street.name} ${person.location.street.number}, ${person.location.state}. ${person.location.postcode}</p>
+                    <p class="modal-text">Birthday: ${formattedDOB}</p>
+                </div>
             </div>
-        </div>
+            <div class="modal-btn-container">
+                <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+                <button type="button" id="modal-next" class="modal-next btn">Next</button>
+            </div>
+    </div>
     `
     }); 
     for (let person of peopleModals) {
@@ -71,19 +74,30 @@ function createModalWindow(data) {
         modal.style.display = 'none';
     }
 
-    const closeButtons = gallery.querySelectorAll('#modal-close-btn');
-    for (let button of closeButtons) {
-        button.addEventListener('click', closeModal);
-    }
+    function addListenersToModalBtns() {
+        const closeButtons = gallery.querySelectorAll('#modal-close-btn');
+        for (let button of closeButtons) {
+            button.addEventListener('click', closeModal);
+        }
 
-    const infoContainer = gallery.querySelectorAll('.modal-info-container');
-    for (let containers of infoContainer) {
-        for (let button of containers.children) {
-            if (button.tagName === 'BUTTON') {
-                button.addEventListener('click', switchModal); //switchModal working fine
+        const buttonsContainer = document.getElementsByClassName('modal-btn-container');
+        for (let buttons of buttonsContainer) {
+            for (let button of buttons.children) {
+                button.addEventListener('click', switchModal)
             }
         }
-    }
+     }
+    addListenersToModalBtns();
+    
+
+
+    // for (let containers of infoContainer) {
+    //     for (let button of containers.children) {
+    //         if (button.tagName === 'BUTTON') {
+    //             button.addEventListener('click', switchModal); //switchModal working fine
+    //         }
+    //     }
+    // }
 }
 
 
@@ -115,10 +129,17 @@ function displayModal(e) {
             break;
         }
     }
+
 }
 
 let currentModal;
 function closeModal(e) {
+    if (currentModal !== e.target.parentNode.parentNode.parentNode) { //problem here..can't compare currentModal with the actual modal selected
+        console.log(currentModal.previousElementSibling);
+        currentModal = currentModal.nextElementSibling;
+    } else if (currentModal === null) {
+        currentModal = e.target.parentNode.parentNode;
+    }
     if (e.key === 'Escape') {
         currentModal.style.display = 'none';
     } else if (e.type === 'click') {
@@ -127,9 +148,23 @@ function closeModal(e) {
 } 
 
 function switchModal(e) {
-    if (e.target.id === 'move-right') {
-        console.log('right');
-    }
+    const modalList = gallery.children; 
+    const modalArray = Array.from(modalList);
+    const currentModal = e.target.parentNode.parentNode;
+    const nextModal = currentModal.nextElementSibling;
+    const prevModal = currentModal.previousElementSibling;
+
+    
+
+    const currModalIndex = modalArray.indexOf(currentModal);
+    
+    if (e.target.id === 'modal-next' && currModalIndex !== 23) {
+        currentModal.style.display = 'none';
+        nextModal.style.display = '';
+    } else if (e.target.id === 'modal-prev' && currModalIndex !== 12) {
+        currentModal.style.display = 'none';
+        prevModal.style.display = '';
+    } 
 }
 
 document.addEventListener('keyup', closeModal);
