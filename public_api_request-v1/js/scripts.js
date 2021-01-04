@@ -51,6 +51,8 @@ function createModalWindow(data) {
                 <img class="modal-img" src="${person.picture.large}" alt="profile picture">
                 <h3 id="name" class="modal-name cap">${person.name.first} ${person.name.last}</h3>
                 <p class="modal-text">${person.email}</p>
+                <button id="move-right">Next</button>
+                <button id="move-left">Previous</button>
                 <p class="modal-text cap">${person.location.city}</p>
                 <hr>
                 <p class="modal-text">${formattedNum}</p>
@@ -143,9 +145,8 @@ searchContainer.innerHTML = searchForm;
 
 searchContainer.addEventListener('keyup', (e, data) => {
     let search = e.target.value;
-    console.log(search);
-
     const modalList = gallery.children;
+
     for (let i = 0; i < 12; i++) {
         let fullName = modalList[i].children[1].firstElementChild.textContent.toLowerCase();
         if (!fullName.includes(search.toLowerCase())) {
@@ -156,7 +157,7 @@ searchContainer.addEventListener('keyup', (e, data) => {
     }
 });
 
-// working on the filter for the searchbar
+
 
 
 
