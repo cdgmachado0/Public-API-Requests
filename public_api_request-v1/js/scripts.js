@@ -40,6 +40,16 @@ function checkStatus(response) {
 }
 
 function createModalWindow(data) {
+    function formatDetails(detail) { 
+        const phoneRegex = /^\D*?(\d{3})\D*?(\d{3})\D*?(\d{4})/; 
+        const dobRegex = /^(\d{4})\D*(\d{2})\D*(\d{2}).+/;
+        if (detail.charAt(0) === '(') {
+            return formattedNum = detail.replace(phoneRegex, '($1) $2-$3'); 
+        } else {
+            return formattedDOB = detail.replace(dobRegex, '$2/$3/$1');   
+        }
+    }
+    
     const peopleModals = data.results.map(person => {
         let formattedNum = formatDetails(person.cell);
         let formattedDOB = formatDetails(person.dob.date);
@@ -117,10 +127,9 @@ function displayModal(e) {
             break;
         }
     }
-
 }
 
-let currentModal;
+
 function closeModal(e) {
     const modalList = gallery.children;
     let currentModal = '';
@@ -143,18 +152,24 @@ function closeModal(e) {
 
 
 function switchModal(e) {
-
     const userSearch = document.getElementById('search-input').value;
-    let modalList = [];
     const currentModal = e.target.parentNode.parentNode;
     let nextModal = '';
     let prevModal = '';
     let modalArray = [];
-    let cardArray = [];
+    function adjustSwitching(index1, index2) {
+        const currModalIndex = modalArray.indexOf(currentModal);
+        if (e.target.id === 'modal-next' && currModalIndex !== index1 && nextModal) {
+            currentModal.style.display = 'none';
+            nextModal.style.display = '';
+        } else if (e.target.id === 'modal-prev' && currModalIndex !== index2) {
+            currentModal.style.display = 'none';
+            prevModal.style.display = '';
+        } 
+    }
 
     if (userSearch === '') {
-        modalList = gallery.children;
-        modalArray = Array.from(modalList);
+        modalArray = Array.from(gallery.children);
         nextModal = currentModal.nextElementSibling;
         prevModal = currentModal.previousElementSibling;
         adjustSwitching(23, 12);
@@ -171,40 +186,15 @@ function switchModal(e) {
             }
            }
         }
-
-        
-
         const last = modalArray.length;
         nextModal = modalArray[modalArray.indexOf(currentModal) + 1]; 
         prevModal = modalArray[modalArray.indexOf(currentModal) - 1];
         adjustSwitching(last, 0);
     }
-
-    function adjustSwitching(index1, index2) {
-        const currModalIndex = modalArray.indexOf(currentModal);
-        if (e.target.id === 'modal-next' && currModalIndex !== index1 && nextModal) {
-            currentModal.style.display = 'none';
-            nextModal.style.display = '';
-        } else if (e.target.id === 'modal-prev' && currModalIndex !== index2) {
-            currentModal.style.display = 'none';
-            prevModal.style.display = '';
-        } 
-    }
 }
 
 document.addEventListener('keyup', closeModal);
 
-
-function formatDetails(detail) { 
-    const phoneRegex = /^\D*?(\d{3})\D*?(\d{3})\D*?(\d{4})/; 
-    const dobRegex = /^(\d{4})\D*(\d{2})\D*(\d{2}).+/;
-
-    if (detail.charAt(0) === '(') {
-        return formattedNum = detail.replace(phoneRegex, '($1) $2-$3'); 
-    } else {
-        return formattedDOB = detail.replace(dobRegex, '$2/$3/$1');   
-    }
-}
 
 
 const searchForm = `
