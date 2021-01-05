@@ -134,15 +134,16 @@ function displayModal(e) {
 
 let currentModal;
 function closeModal(e) {
-    if (currentModal !== e.target.parentNode.parentNode.parentNode) { //problem here..can't compare currentModal with the actual modal selected
-        console.log(currentModal.previousElementSibling);
-        currentModal = currentModal.nextElementSibling;
-    } else if (currentModal === null) {
-        currentModal = e.target.parentNode.parentNode;
-    }
+    const modalList = gallery.children;
     if (e.key === 'Escape') {
-        currentModal.style.display = 'none';
+        for (let modal of modalList) {
+            if (modal.className === 'modal-container' && modal.style.display !== 'none') {
+                modal.style.display = 'none';
+                break;
+            }
+        }
     } else if (e.type === 'click') {
+        const currentModal = e.target.parentNode.parentNode.parentNode;
         currentModal.style.display = 'none';
     }
 } 
