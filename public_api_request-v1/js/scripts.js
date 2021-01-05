@@ -150,6 +150,7 @@ function switchModal(e) {
     let nextModal = '';
     let prevModal = '';
     let modalArray = [];
+    let cardArray = [];
 
     if (userSearch === '') {
         modalList = gallery.children;
@@ -159,20 +160,29 @@ function switchModal(e) {
         adjustSwitching(23, 12);
     } else {
         let list = gallery.children;
-        for (let modal of list) {
-           if (modal.style.display !== 'none' && modal.className === 'card') {
-            modalArray.push(modal); 
+        for (let card of list) {
+           if (card.style.display !== 'none' && card.className === 'card') {
+            for (let i = 12; i < 24; i++) {
+                let nameCard = card.querySelector('h3').textContent;
+                let nameModal = list[i].querySelector('h3').textContent;
+                if (nameCard === nameModal) {
+                    modalArray.push(list[i]);
+                }
+            }
            }
         }
+
+        
+
         const last = modalArray.length;
-        nextModal = modalArray[modalArray.indexOf(currentModal) + 2]; //tengo que fijar nextModal to the ModalWindow que va con el .card, no el .card itself
-        prevModal = modalArray[modalArray.indexOf(currentModal) - 2];
+        nextModal = modalArray[modalArray.indexOf(currentModal) + 1]; 
+        prevModal = modalArray[modalArray.indexOf(currentModal) - 1];
         adjustSwitching(last, 0);
     }
 
     function adjustSwitching(index1, index2) {
         const currModalIndex = modalArray.indexOf(currentModal);
-        if (e.target.id === 'modal-next' && currModalIndex !== index1) {
+        if (e.target.id === 'modal-next' && currModalIndex !== index1 && nextModal) {
             currentModal.style.display = 'none';
             nextModal.style.display = '';
         } else if (e.target.id === 'modal-prev' && currModalIndex !== index2) {
