@@ -1,1 +1,8 @@
-This is the first README file I create using nano through the terminal
+Changes done to style.css:
+
+- Changed the background color of the <body> to rgb(0, 255, 255).
+
+
+Extra functionality:
+
+- It is possible to close each modal window by pressing "Esc".
