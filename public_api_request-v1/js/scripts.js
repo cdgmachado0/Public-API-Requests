@@ -74,30 +74,18 @@ function createModalWindow(data) {
         modal.style.display = 'none';
     }
 
-    function addListenersToModalBtns() {
-        const closeButtons = gallery.querySelectorAll('#modal-close-btn');
-        for (let button of closeButtons) {
-            button.addEventListener('click', closeModal);
+    const closeButtons = gallery.querySelectorAll('#modal-close-btn');
+    for (let button of closeButtons) {
+        button.addEventListener('click', closeModal);
+    }
+
+    const buttonsContainer = document.getElementsByClassName('modal-btn-container');
+    for (let buttons of buttonsContainer) {
+        for (let button of buttons.children) {
+            button.addEventListener('click', switchModal)
         }
-
-        const buttonsContainer = document.getElementsByClassName('modal-btn-container');
-        for (let buttons of buttonsContainer) {
-            for (let button of buttons.children) {
-                button.addEventListener('click', switchModal)
-            }
-        }
-     }
-    addListenersToModalBtns();
-    
-
-
-    // for (let containers of infoContainer) {
-    //     for (let button of containers.children) {
-    //         if (button.tagName === 'BUTTON') {
-    //             button.addEventListener('click', switchModal); //switchModal working fine
-    //         }
-    //     }
-    // }
+    }
+     
 }
 
 
@@ -153,21 +141,45 @@ function closeModal(e) {
     }
 } 
 
+
 function switchModal(e) {
-    const modalList = gallery.children; 
-    const modalArray = Array.from(modalList);
+
+    const userSearch = document.getElementById('search-input').value;
+    let modalList = [];
     const currentModal = e.target.parentNode.parentNode;
-    const nextModal = currentModal.nextElementSibling;
-    const prevModal = currentModal.previousElementSibling;
-    const currModalIndex = modalArray.indexOf(currentModal);
-    
-    if (e.target.id === 'modal-next' && currModalIndex !== 23) {
-        currentModal.style.display = 'none';
-        nextModal.style.display = '';
-    } else if (e.target.id === 'modal-prev' && currModalIndex !== 12) {
-        currentModal.style.display = 'none';
-        prevModal.style.display = '';
-    } 
+    let nextModal = '';
+    let prevModal = '';
+    let modalArray = [];
+
+    if (userSearch === '') {
+        modalList = gallery.children;
+        modalArray = Array.from(modalList);
+        nextModal = currentModal.nextElementSibling;
+        prevModal = currentModal.previousElementSibling;
+        adjustSwitching(23, 12);
+    } else {
+        let list = gallery.children;
+        for (let modal of list) {
+           if (modal.style.display !== 'none' && modal.className === 'card') {
+            modalArray.push(modal); 
+           }
+        }
+        const last = modalArray.length;
+        nextModal = modalArray[modalArray.indexOf(currentModal) + 2]; //tengo que fijar nextModal to the ModalWindow que va con el .card, no el .card itself
+        prevModal = modalArray[modalArray.indexOf(currentModal) - 2];
+        adjustSwitching(last, 0);
+    }
+
+    function adjustSwitching(index1, index2) {
+        const currModalIndex = modalArray.indexOf(currentModal);
+        if (e.target.id === 'modal-next' && currModalIndex !== index1) {
+            currentModal.style.display = 'none';
+            nextModal.style.display = '';
+        } else if (e.target.id === 'modal-prev' && currModalIndex !== index2) {
+            currentModal.style.display = 'none';
+            prevModal.style.display = '';
+        } 
+    }
 }
 
 document.addEventListener('keyup', closeModal);
