@@ -135,6 +135,7 @@ function displayModal(e) {
 let currentModal;
 function closeModal(e) {
     const modalList = gallery.children;
+    let currentModal = '';
     if (e.key === 'Escape') {
         for (let modal of modalList) {
             if (modal.className === 'modal-container' && modal.style.display !== 'none') {
@@ -143,7 +144,11 @@ function closeModal(e) {
             }
         }
     } else if (e.type === 'click') {
-        const currentModal = e.target.parentNode.parentNode.parentNode;
+        if (e.target.id !== 'modal-close-btn') {
+            currentModal = e.target.parentNode.parentNode.parentNode;
+        } else {
+            currentModal = e.target.parentNode.parentNode;
+        }
         currentModal.style.display = 'none';
     }
 } 
@@ -154,9 +159,6 @@ function switchModal(e) {
     const currentModal = e.target.parentNode.parentNode;
     const nextModal = currentModal.nextElementSibling;
     const prevModal = currentModal.previousElementSibling;
-
-    
-
     const currModalIndex = modalArray.indexOf(currentModal);
     
     if (e.target.id === 'modal-next' && currModalIndex !== 23) {
