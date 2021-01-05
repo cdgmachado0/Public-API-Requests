@@ -1,6 +1,7 @@
+// Main variable
 const gallery = document.querySelector('#gallery');
 
-
+// Request of data
 fetch('https://randomuser.me/api/?results=12&nat=us')
     .then(checkStatus)
     .then(response => response.json())
@@ -9,6 +10,23 @@ fetch('https://randomuser.me/api/?results=12&nat=us')
     .catch(err => console.error('Something went wrong:', err));
 
 
+/**
+ * Checks if the response was successfully submitted
+ * @param {object} response HTTP response from the request made to the server
+ */
+function checkStatus(response) {
+    if (response.ok) {
+        return Promise.resolve(response);
+    } else {
+        return Promise.reject(new Error(response.statusText));
+    }
+}
+
+
+/**
+ * Creates the gallery of boxes with the general details of each employee
+ * @param {object} data JSON data containing the information of each employee
+ */
 function createGallery(data) {
     const peopleGallery = data.results.map(person => `
     <div class="card">
@@ -31,15 +49,13 @@ function createGallery(data) {
     return data; 
 }
 
-function checkStatus(response) {
-    if (response.ok) {
-        return Promise.resolve(response);
-    } else {
-        return Promise.reject(new Error(response.statusText));
-    }
-}
 
+/**
+ * Creates the modal window for each employee
+ * @param {object} data JSON data containing the information of each employee
+ */
 function createModalWindow(data) {
+    //Format the two details that need to be formatted according to the instructions of the project
     function formatDetails(detail) { 
         const phoneRegex = /^\D*?(\d{3})\D*?(\d{3})\D*?(\d{4})/; 
         const dobRegex = /^(\d{4})\D*(\d{2})\D*(\d{2}).+/;
@@ -49,7 +65,7 @@ function createModalWindow(data) {
             return formattedDOB = detail.replace(dobRegex, '$2/$3/$1');   
         }
     }
-    
+
     const peopleModals = data.results.map(person => {
         let formattedNum = formatDetails(person.cell);
         let formattedDOB = formatDetails(person.dob.date);
@@ -72,8 +88,8 @@ function createModalWindow(data) {
                 <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
                 <button type="button" id="modal-next" class="modal-next btn">Next</button>
             </div>
-    </div>
-    `
+        </div>
+        `
     }); 
     for (let person of peopleModals) {
         gallery.insertAdjacentHTML('beforeend', person);
@@ -84,24 +100,28 @@ function createModalWindow(data) {
         modal.style.display = 'none';
     }
 
+    //Adds the EventListeners that act on each modal window
     const closeButtons = gallery.querySelectorAll('#modal-close-btn');
     for (let button of closeButtons) {
         button.addEventListener('click', closeModal);
     }
-
     const buttonsContainer = document.getElementsByClassName('modal-btn-container');
     for (let buttons of buttonsContainer) {
         for (let button of buttons.children) {
             button.addEventListener('click', switchModal)
         }
-    }
-     
+    }   
 }
 
 
+/**
+ * Displays/Hides the proper modal window depending on user's interaction
+ * @param {event} e Event object from an EventListener
+ */
 function displayModal(e) { 
     const target = e.target;
     let email;
+    //Gets the email of the target, and use it as a reference to see which modal window is displayed
     if (target.className === 'card-info-container') {
         email = target.firstElementChild.nextElementSibling;
     } else if (target.tagName === 'IMG') {
@@ -130,6 +150,10 @@ function displayModal(e) {
 }
 
 
+/**
+ * Closes the current modal window (Esc or click on "X")
+ * @param {event} e Event object from an EventListener
+ */
 function closeModal(e) {
     const modalList = gallery.children;
     let currentModal = '';
@@ -151,12 +175,17 @@ function closeModal(e) {
 } 
 
 
+/**
+ * Handles the interaction between switching modals back and forth with the Next/Prev buttons
+ * @param {event} e Event object from an EventListener
+ */
 function switchModal(e) {
     const userSearch = document.getElementById('search-input').value;
     const currentModal = e.target.parentNode.parentNode;
     let nextModal = '';
     let prevModal = '';
     let modalArray = [];
+    //Adjusts the swicting of modals when a search has been made with the Search Bar
     function adjustSwitching(index1, index2) {
         const currModalIndex = modalArray.indexOf(currentModal);
         if (e.target.id === 'modal-next' && currModalIndex !== index1 && nextModal) {
@@ -193,31 +222,31 @@ function switchModal(e) {
     }
 }
 
+// EventListener for closing a modal with the "Esc" key
 document.addEventListener('keyup', closeModal);
 
 
-
+// Addition of the Search Bar to index.html
 const searchForm = `
     <form action="#" method="get">
         <input type="search" id="search-input" class="search-input" placeholder="Search...">
         <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
     </form>
 `;
-
 const searchContainer = document.querySelector('div.search-container')
 searchContainer.innerHTML = searchForm;
 
-
-searchContainer.addEventListener('keyup', (e, data) => {
+// Handles the dynamic search of the Search Bar
+searchContainer.addEventListener('keyup', e => {
     let search = e.target.value;
-    const modalList = gallery.children;
+    const cardList = gallery.children;
 
     for (let i = 0; i < 12; i++) {
-        let fullName = modalList[i].children[1].firstElementChild.textContent.toLowerCase();
+        let fullName = cardList[i].querySelector('h3').textContent.toLowerCase();
         if (!fullName.includes(search.toLowerCase())) {
-            modalList[i].style.display = 'none';
+            cardList[i].style.display = 'none';
         } else {
-            modalList[i].style.display = '';
+            cardList[i].style.display = '';
         }
     }
 });
